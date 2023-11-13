@@ -201,35 +201,37 @@ def uniformCostSearch(problem: SearchProblem):
     totalCost = 0
 #     TODO set the goal
     goal = None
-#     TODO set the priority queue
+#     TODO set the priority queue and add start to it
     priorityQueue = util.PriorityQueue()
+    priorityQueue.push((start, [], 0), 0)
 #     TODO set the reached node list
     reachedNodes = []
-#     TODO mark start as visited
-    reachedNodes.append((start, [], totalCost))
+
 #     TODO while loop
 #     while q not equal to 0
     while not priorityQueue.isEmpty():
 #     TODO get the node, cost and directions form list - u = exrtract MIN(q)
-        node, directions, actual_cost = priorityQueue.pop()
-#     TODO check if exit condition is valid
+        node, directions, currCost = priorityQueue.pop()
+#
+#     TODO check if exit condition is valid - goal found
         if problem.isGoalState(node):
             return directions
-        # S = S U {u}
-        reachedNodes.append(node)
-#       for fiecare nod v apartine G.Adj[u]
-        successors = problem.getSuccessors(node)
-        for successor, direction, stepCost in successors:
-#       RELAX(U,V, W)
-            stepCost = problem.getCostOfActions(direction)
-            newCost = totalCost + stepCost # increase the cost with current step cost
-            newDirection = directions + [direction] # add the direction to directions
-#             add to the pryority queue item with new priority (newCost)
-            priorityQueue.push(newCost, (successor,newDirection,newCost) )
 
+
+#       for fiecare nod v apartine G.Adj[u]
+        if node not in reachedNodes:
+            successors = problem.getSuccessors(node)
+            for successor, action, stepCost in successors:
+#       RELAX(U,V, W)
+                if successor[0] not in reachedNodes:
+                    newCost = totalCost + stepCost # increase the cost with current step cost
+                    newDirection = directions + [action] # add the direction to directions
+#             add to the pryority queue item with new priority (newCost)
+                    priorityQueue.push((successor, newDirection, newCost), newCost )
+            reachedNodes.append(node)
 
 #  return failure
-#     util.raiseNotDefined()
+    util.raiseNotDefined()
 
 
 def nullHeuristic(state, problem=None):
