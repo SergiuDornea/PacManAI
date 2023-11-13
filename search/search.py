@@ -116,9 +116,7 @@ def depthFirstSearch(problem: SearchProblem):
 #           TODO check for exit condition - is goal state true?
             if problem.isGoalState(node):
                 return directionList
-#             TODO I DO NOT NEED TO FOLLOW THE
-#               PSEUDO CODE EXACTLY BECAUSE OF THE getSuccesor()
-#               THERE IS NO NEED TO CHECK EACH OF THE POTENTIAL ACTIONS
+#
 #       for each child in EXPAND(problem, node) do
 #           s ← child.STATE
 #           if problem.IS-GOAL(s) then return child
@@ -169,9 +167,7 @@ def breadthFirstSearch(problem: SearchProblem):
 #           TODO check for exit condition - is goal state true?
             if problem.isGoalState(node):
                 return directionList
-#             TODO I DO NOT NEED TO FOLLOW THE
-#               PSEUDO CODE EXACTLY BECAUSE OF THE getSuccesor()
-#               THERE IS NO NEED TO CHECK EACH OF THE POTENTIAL ACTIONS
+#
 #       for each child in EXPAND(problem, node) do
 #           s ← child.STATE
 #           if problem.IS-GOAL(s) then return child
@@ -194,7 +190,47 @@ def breadthFirstSearch(problem: SearchProblem):
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+# Strategia: expandeaza nodul cu
+# costul cel mai mic
+# Implementare: coada de
+# prioritati (cost cumulativ) are
+# rol de granita
+#     TODO set the start
+    start = problem.getStartState()
+#     TODO set the cost
+    totalCost = 0
+#     TODO set the goal
+    goal = None
+#     TODO set the priority queue
+    priorityQueue = util.PriorityQueue()
+#     TODO set the reached node list
+    reachedNodes = []
+#     TODO mark start as visited
+    reachedNodes.append((start, [], totalCost))
+#     TODO while loop
+#     while q not equal to 0
+    while not priorityQueue.isEmpty():
+#     TODO get the node, cost and directions form list - u = exrtract MIN(q)
+        node, directions, actual_cost = priorityQueue.pop()
+#     TODO check if exit condition is valid
+        if problem.isGoalState(node):
+            return directions
+        # S = S U {u}
+        reachedNodes.append(node)
+#       for fiecare nod v apartine G.Adj[u]
+        successors = problem.getSuccessors(node)
+        for successor, direction, stepCost in successors:
+#       RELAX(U,V, W)
+            stepCost = problem.getCostOfActions(direction)
+            newCost = totalCost + stepCost # increase the cost with current step cost
+            newDirection = directions + [direction] # add the direction to directions
+#             add to the pryority queue item with new priority (newCost)
+            priorityQueue.push(newCost, (successor,newDirection,newCost) )
+
+
+#  return failure
+#     util.raiseNotDefined()
+
 
 def nullHeuristic(state, problem=None):
     """
