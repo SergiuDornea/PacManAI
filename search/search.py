@@ -87,12 +87,61 @@ def depthFirstSearch(problem: SearchProblem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+# function BREADTH-FIRST-SEARCH(problem) returns a solution node or failure
+#   node ← NODE(problem.INITIAL) -
+    #   TODO defined the inital node
+    initialNode = problem.getStartState()
+#   if problem.IS-GOAL(node.STATE) then return node
+#  TODO check if goal has been reached
+    if problem.isGoalState(initialNode):
+        return [] # no actions needed if we start at the goal
+#   frontier ← a FIFO queue
+#   TODO create queue
+    queue = util.Queue() # create the queue using the provided utils
+    #   with node as an element
+    #   TODO add the node to the list  with an empty list for directions as an object
+    queue.push((initialNode, []))
+#   reached ← {problem.INITIAL}
+#   TODO create a list to hold the values of reached nodes
+    reachedNodes = []
+#   while not IS-EMPTY(frontier ) do
+    while not queue.isEmpty():
+#       node ← POP(frontier )
+        #TODO dequeue a nod (and list of directions) form the queue
+        node, directionList = queue.pop()
+#       TODO check if node has been reached , if not add it to reachedNodes
+        if node not in reachedNodes:
+            reachedNodes.append(node)
+#           TODO check for exit condition - is goal state true?
+            if problem.isGoalState(node):
+                return directionList
+#             TODO I DO NOT NEED TO FOLLOW THE
+#               PSEUDO CODE EXACTLY BECAUSE OF THE getSuccesor()
+#               THERE IS NO NEED TO CHECK EACH OF THE POTENTIAL ACTIONS
+#       for each child in EXPAND(problem, node) do
+#           s ← child.STATE
+#           if problem.IS-GOAL(s) then return child
+#           if s is not in reached then
+#               add s to reached
+#               add child to frontier
+#             TODO iterate over the succesors of current node
+            succesorsList = problem.getSuccessors(node)
+            for succesor, direction, stepCost in succesorsList:
+#               TODO append the curr direction to directionList and
+#                create newDirectionList
+#                (holds the seauence of directions from initial state to current succesor)
+                newDirection = directionList + [direction]
+#                 TODO enqueue the succesor node with newDirectionList to queue
+                queue.push((succesor, newDirection))
+#  return failure
     util.raiseNotDefined()
+
 
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
