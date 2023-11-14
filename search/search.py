@@ -244,6 +244,56 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    """function GRAPH-SEARCH(problema, frontiera) :returneaza o solutie sau esec
+        closed ← o multime goala
+        frontiera ← INSERT(MAKE-NODE(INITIAL-STATE(problema)), frontiera)
+        loop
+            if frontiera este goala then
+                return esec
+            end if
+            node ← REMOVE-FRONT(frontiera)
+            if GOAL-TEST(problema, STATE(node)) then
+                return node
+            end if
+            if STATE(node) nu este in closed then
+                add STATE(node) la closed
+                for child-node in EXPAND(STATE(node), problem) do
+                frontiera ← INSERT(child-node, frontiera)
+                end for
+            end if
+        end loop
+    end function"""
+    # TODO start node
+    start = problem.getStartState()
+    #TODO  set reached node list
+    reachedNodes = []
+    #TODO set queue
+    priorityQueue = util.PriorityQueue()
+    #todo add start node to queue
+    priorityQueue.push((start,[],0), 0)
+    #TODO check if start node is not the goal
+    if problem.isGoalState(start):
+        return []
+
+    while not priorityQueue.isEmpty():
+        #     TODO get the node, cost and directions form queue
+        node, directions, currCost = priorityQueue.pop()
+        if node not in reachedNodes:
+        #     todo add the node to the reached list
+            reachedNodes.append(node)
+        #     TODO check if exit condition is valid - goal found
+            if problem.isGoalState(node):
+                return directions
+            successors = problem.getSuccessors(node)
+            for successor, action, stepCost in successors:
+                newCost = currCost + stepCost  # increase the cost with current step cost
+                heuristicCost = heuristic(successor, problem) + newCost # calculate the f(n) by adding new cost to the result of heuristic
+                newDirection = directions + [action]  # add the direction to directions
+                #             add to the pryority queue item with new priority (newCost)
+                priorityQueue.push((successor, newDirection, newCost), heuristicCost) #instead of setting the priority as the cost (like in UCS) set the priority according to the heuristic cost
+
+
+
     util.raiseNotDefined()
 
 
